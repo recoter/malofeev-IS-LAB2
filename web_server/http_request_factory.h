@@ -59,15 +59,7 @@ public:
             hasSubstr(request.getURI(),"/search") ||
             hasSubstr(request.getURI(),"/auth")) 
             return new UserHandler(_format);
-        return 0;
-    }
-
-    HTTPRequestHandler* createRequestHandler(
-        const HTTPServerRequest& request)
-    {
-
-        std::cout << "request:" << request.getURI()<< std::endl;
-        if (hasSubstr(request.getURI(),"/route") ||
+        else if (hasSubstr(request.getURI(),"/route") ||
             hasSubstr(request.getURI(),"/routesearch")) 
             return new RouteHandler(_format);
         return 0;
