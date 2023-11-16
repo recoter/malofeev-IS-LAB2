@@ -39,6 +39,7 @@ using Poco::Util::OptionCallback;
 using Poco::Util::HelpFormatter;
 
 #include "handlers/user_handler.h"
+#include "handlers/route_handler.h"
 
 
 class HTTPRequestFactory: public HTTPRequestHandlerFactory
@@ -58,6 +59,17 @@ public:
             hasSubstr(request.getURI(),"/search") ||
             hasSubstr(request.getURI(),"/auth")) 
             return new UserHandler(_format);
+        return 0;
+    }
+
+    HTTPRequestHandler* createRequestHandler(
+        const HTTPServerRequest& request)
+    {
+
+        std::cout << "request:" << request.getURI()<< std::endl;
+        if (hasSubstr(request.getURI(),"/route") ||
+            hasSubstr(request.getURI(),"/routesearch")) 
+            return new RouteHandler(_format);
         return 0;
     }
 

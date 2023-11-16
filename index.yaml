@@ -7,6 +7,35 @@ servers:
   - url: http://localhost:8080
     description: Example server
 paths:
+  /routesearch:
+    get:
+      summary: Поиск маршрутов пользователя
+      parameters:
+      - name: author_id
+        description: ID автора маршрута
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The route for the provided id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/users'
+        404:
+          description: No user found for the provided mask
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /search:
     get:
       summary: Поиск пользователей по маске имени и фамилии
@@ -38,6 +67,65 @@ paths:
                 $ref: '#/components/schemas/Error'
         500:
           description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /user:
+    post:
+      summary: Добавление нового маршрута
+      parameters:
+      - name: name
+        description: Название маршрута
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: starting_point
+        description: Точка отправки
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: end_point
+        description: Конечная точка
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: description
+        description: Описание маршрута 
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: date
+        description: Дата, по которым происходит поезда 
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: author_id
+        description: ID владельца маршрута
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Идентификатор, добавленного пользователя
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          description: Ошибка добавления пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        500:
+          description: Неожиданная ошибка
           content:
             application/json:
               schema:
@@ -147,6 +235,46 @@ paths:
                 $ref: '#/components/schemas/Error'
 components:
   schemas:
+    route_id:
+      description: Уникальный идентификатор маршрута
+      type: integer
+    routes:
+      type: array
+      items:
+        $ref: '#/components/schemas/route'
+    route:
+      type: object
+      required:
+        - id
+        - name
+        - starting_point
+        - end_point
+        - description
+        - date
+        - author_id
+      properties:
+        id:
+          $ref: '#/components/schemas/route_id'
+        name:
+          type: string
+        starting_point:
+          type: string
+        end_point:
+          type: string
+        description:
+          type: string
+        date:
+          type: string
+        author_id:
+          type: string
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          description: Сообщение о ошибке
+          type: string
     user_id:
       description: Уникальный идентификатор пользователя
       type: integer
